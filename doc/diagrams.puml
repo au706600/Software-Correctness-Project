@@ -1,0 +1,147 @@
+@startuml Overview
+
+hide empty description
+
+state Java {
+    state Gui {
+        state plot_section
+        state text_comando_section
+        state error_section
+    }
+}
+
+state Scala {
+    state Converter {
+        state Parser
+        state draw_functions {
+            state draw_boundingBox
+            state draw_line
+            state draw_rectangle
+            state draw_circle
+            state draw_text
+
+            draw_boundingBox -[hidden]-> draw_circle
+            draw_line -[hidden]-> draw_text
+        }
+    }
+}
+
+text_comando_section -down-> Parser: Text comandoes
+Parser --> draw_functions: Comandoes
+Parser -up-> error_section: Error messeges
+draw_functions -up-> plot_section: pixel data
+
+@enduml
+
+
+@startuml Relationships
+'skinparam linetype ortho
+'!pragma layout smetana
+
+package Java {
+    file GUI as GUI_ {
+        class GUI {
+            
+        }
+
+        note bottom of GUI
+            We need to make a better implementsion of the GUI
+        end note
+
+    }
+
+    file "utils.java" as utils_java {
+        class ResultFromScala {
+            _pixels: ArrayList<ArrayList<Integer>>
+            _error: String
+
+            ResultFromScala(pixels: ArrayList<ArrayList<Integer>>, error: String)
+            
+            errorExist(): boolean 
+            
+            getError(): String 
+
+            getPixels(): ArrayList<ArrayList<Integer>>
+        } 
+    }
+}
+
+
+package Scala {
+    file "converter.scala" as converter_scala {
+        object converter {
+            pixelsCanvas: PixelsCanvas
+            
+            setBounds(): Unit
+            convert(comandoes: String): ResultFromScala
+        }
+
+        class PixelsCanvas {
+            boundingBox(p1: Point, p2: Point): Unit
+            line(command: Command, p1: Point, p2: Point): Unit
+            rectangle(command: Command, p1: Point, p2: Point): Unit
+            circle(command: Command, p1: Point, r: Float): Unit
+            text(command: Command, p1: Point, text: String): Unit
+        }
+        
+        note bottom of PixelsCanvas
+            We need to desice how to merge the result of the pure draw_functions
+        end note
+
+    }
+
+    file "parser.scala" as parser_scala {
+        object functions {
+            parse(canvas: Canvas, str: String, defaultCommand: Command): ErrorResult
+
+        }
+
+        enum Command {
+            draw(color: String) 
+            fill(color: String)
+        }
+
+        struct Point {
+            x: Float
+            y: Float
+        }
+
+        interface Canvas {
+            boundingBox(p1: Point, p2: Point): Unit
+            line(command: Command, p1: Point, p2: Point): Unit
+            rectangle(command: Command, p1: Point, p2: Point): Unit
+            circle(command: Command, p1: Point, r: Float): Unit
+            text(command: Command, p1: Point, text: String): Unit
+        }
+    }
+
+    file "draw.scala" as draw_scala {
+        object draw_functions {
+            type Pixels = List[List[Int]]
+            boundingBox(p1: Point, p2: Point): Pixels
+            line(command: Command, p1: Point, p2: Point): Pixels
+            rectangle(command: Command, p1: Point, p2: Point): Pixels
+            circle(command: Command, p1: Point, r: Float): Pixels
+            text(command: Command, p1: Point, text: String): Pixels
+        }
+
+        note bottom of draw_functions
+            We need to define these drowing functions
+        end note
+    }
+
+}
+
+PixelsCanvas --> draw_functions
+PixelsCanvas <|.. Canvas
+Canvas --> Point
+PixelsCanvas --> Point
+converter --> PixelsCanvas
+functions --> Canvas
+converter -up-> ResultFromScala
+functions --> Command
+converter --> functions
+GUI ---down-> converter
+GUI -up-> ResultFromScala
+
+@enduml
