@@ -45,14 +45,17 @@ def parse(canvas: Canvas, str: String, defaultCommand: Command): ErrorResult =
     parseSingle(simplifyLisp(str)) match
         case Error(msg) => Error(msg)
         case SingleResult(args, rest) =>
-            parsePoint(args(1), args(2)) match
-                case Error(msg) => Error(msg)
-                case Points(p1, p2) =>
-                    canvas.boundingBox(p1, p2)
-                    if args.head != "BOUNDING-BOX" || args.length != 3 then
-                        Error(s"parse() error: First commando is not a BOUNDING-BOX with 2 args: '$args'")
-                    else
-                        parseRest(canvas, defaultCommand, rest)
+            if args.length < 3 then
+                Error("Error missing arguments")
+            else
+                parsePoint(args(1), args(2)) match
+                    case Error(msg) => Error(msg)
+                    case Points(p1, p2) =>
+                        canvas.boundingBox(p1, p2)
+                        if args.head != "BOUNDING-BOX" || args.length != 3 then
+                            Error(s"parse() error: First commando is not a BOUNDING-BOX with 2 args: '$args'")
+                        else
+                            parseRest(canvas, defaultCommand, rest)
 
 
 def parseSingle(str: String): ParseSingleResult =

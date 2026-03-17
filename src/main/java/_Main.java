@@ -1,6 +1,6 @@
 
 public class _Main {
-  public static void _main(String [] args) {
+  public static void main(String [] args) {
     new GUI(90, 90, 5);
     System.out.println("1111111111");
     converter$.MODULE$.convert("");
