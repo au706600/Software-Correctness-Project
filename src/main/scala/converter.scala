@@ -5,9 +5,9 @@ class PixelsCanvas extends Canvas:
     var pixelsCanvas = java.util.ArrayList[java.util.ArrayList[Integer]]()
 
 
-    def initPixels(witht: Int, height: Int, colorValue: Int=0) =
+    def initPixels(width: Int, height: Int, colorValue: Int=0) =
         pixelsCanvas = pixelsToJava((
-            for{i <- 0 until witht}
+            for{i <- 0 until width}
                 yield {for{j <- 0 until height}
                     yield colorValue}.toList).toList)
 
@@ -41,12 +41,12 @@ class PixelsCanvas extends Canvas:
 object converter:
     var pixels = PixelsCanvas()
 
-    def setBounds(witht: Int, height: Int, colorValue: Int=0): Unit =
-        pixels.initPixels(witht, height, colorValue)
+    def setBounds(width: Int, height: Int, colorValue: Int=0): Unit =
+        pixels.initPixels(width, height, colorValue)
 
-    def convert(comandoes: String): ResultFromScala =
+    def convert(commandos: String): ResultFromScala =
         // pixels.claarPixels()
-        parse(pixels, comandoes, Command.draw("black")) match
+        parse(pixels, commandos, Command.draw("black")) match
             case Error(msg) => ResultFromScala(pixels.pixelsCanvas, msg)
             case NoError() => ResultFromScala(pixels.pixelsCanvas, "")
         

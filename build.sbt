@@ -17,4 +17,4 @@ scalacOptions ++= Seq(
   "-deprecation"
 )
 
-fork in run := true
+run / fork := true

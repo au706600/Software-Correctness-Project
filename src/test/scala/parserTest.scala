@@ -1,7 +1,10 @@
+import scala.language.implicitConversions
 import collection.mutable._
-
+import scala.compiletime.ops.boolean
+import munit.Compare
 
 class MySuite extends munit.FunSuite:
+
   test("simplifyLisp"):
     assertEquals(
       simplifyLisp(" \n (    Fun    x    y  ) \r "),
@@ -99,21 +102,20 @@ class MySuite extends munit.FunSuite:
 
 
   test("parse 4"):
-    assert(parseOk("(BOUNDING-BOX (1 2) (3 4))"))
-    assert(parseOk("(BOUNDING-BOX (1 2) (3 4)) (LINE (10 11) (12 13))"))
-    assert(parseFail("(BOUNDING-BOX (1 2) (3 4) (5 6))"))
-    assert(parseFail("(LINE (10 11) (12 13))"))
+    assertEquals(handleParse("(BOUNDING-BOX (1 2) (3 4))"), NoError())
+    assertEquals(handleParse("(BOUNDING-BOX (1 2) (-3 4))"), TestError())
+    assertEquals(handleParse("(BOUNDING-BOX (0 0) (3 4)) (LINE (10 11) (12 13))"), NoError())
+    assertEquals(handleParse("(BOUNDING-BOX (1 2) (3 4)) (LINE (10 11) (12 -13))"), TestError())
+    assertEquals(handleParse("(BOUNDING-BOX (1 2) (3 4) (5 6))"), TestError())
+    assertEquals(handleParse("(BOUNDING-BOX (1 2) (3 4)) (CIRCLE (1 2) 3)"), NoError())
+    assertEquals(handleParse("(BOUNDING-BOX (1 2) (3 4)) (CIRCLE (1 2) -3)"), TestError())
+    assertEquals(handleParse("(LINE (10 11) (12 13))"), TestError())
+    
 
-
-def parseOk(str: String) =
+def handleParse(str: String): ErrorResult =
   var canvas = FakeCanvas()
-  parse(canvas, str, Command.draw("green")) match
-    case Error(_) => false
-    case NoError() => true
+  parse(canvas, str, Command.draw("green"))
 
-
-def parseFail(str: String) =
-  !parseOk(str)
 
 
 case class CanvasTestData(name: String, command: Option[Command], point1: Option[Point], point2: Option[Point], r: Option[Float], text: Option[String]):
@@ -175,3 +177,15 @@ class FakeCanvas extends Canvas:
 
     def text(command: Command, p1: Point, text: String): Unit =
         add("text", command=Some(command), p1=Some(p1), text=Some(text))
+
+
+case class TestError()
+
+
+given Compare[ErrorResult, TestError] with
+  override def isEqual(obtained: ErrorResult, expected: TestError): Boolean = {
+    obtained match
+      case Error(msg) => true
+      case NoError() => false
+  }
+  
