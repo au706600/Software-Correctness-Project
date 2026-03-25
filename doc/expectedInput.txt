@@ -1,0 +1,7 @@
+The expected input (random number) of the program, can be used to copy and paste in developing phase and demo to save time:
+
+(BOUNDING-BOX (5 5) (100 100))
+(LINE (4 4) (99 76))
+(LINE (4 4) (49 93))
+
+(RECTANGLE (4 4) (20 20))

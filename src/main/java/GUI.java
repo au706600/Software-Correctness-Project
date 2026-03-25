@@ -85,14 +85,11 @@ public class GUI {
                 {
                     for(int j = 0; j < pixels.get(i).size(); j++)
                     {
-                        if(pixels.get(i).get(j) == 1)
-                        {
-                            g.setColor(Color.BLACK);
-                        }
-
-                        else
-                        {
-                            g.setColor(Color.WHITE);
+                        int v = pixels.get(i).get(j);
+                        switch (v) {
+                            case 1 -> g.setColor(Color.BLACK);    
+                            case 2 -> g.setColor(Color.LIGHT_GRAY);     
+                            default -> g.setColor(Color.WHITE);   
                         }
                         
                         g.fillRect(

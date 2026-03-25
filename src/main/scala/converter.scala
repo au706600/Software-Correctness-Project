@@ -1,8 +1,14 @@
-
 import java.{util => pixelspixelsToJava}
 
 class PixelsCanvas extends Canvas:
     var pixelsCanvas = java.util.ArrayList[java.util.ArrayList[Integer]]()
+
+    private def updatePixelCanvas(pixels: List[List[Int]]): Unit =
+        for i <- 0 until pixels.size do
+            for j <- 0 until pixels(i).size do
+                if i < pixelsCanvas.size && j < pixelsCanvas.get(i).size then
+                    if pixels(i)(j) == 1 then
+                        pixelsCanvas.get(i).set(j, 1)
 
 
     def initPixels(width: Int, height: Int, colorValue: Int=0) =
@@ -19,12 +25,19 @@ class PixelsCanvas extends Canvas:
 
     def boundingBox(p1: Point, p2: Point): Unit =
         println(s"BOUNDING-BOX $p1 $p2")
+        val pixels = draw.boundingBox(p1, p2)
+        val coloredBox = pixels.map(row => row.map(v => if v == 1 then 2 else 0))
+        pixelsCanvas = pixelsToJava(coloredBox)
 
     def line(command: Command, p1: Point, p2: Point): Unit =
         printCommand(command, s"draw $p1 $p2")
+        val pixels = draw.line(command, p1, p2)
+        updatePixelCanvas(pixels)
 
     def rectangle(command: Command, p1: Point, p2: Point): Unit =
         printCommand(command, s"rectangle $p1 $p2")
+        val pixels = draw.rectangle(command, p1, p2)
+        updatePixelCanvas(pixels)
 
     def circle(command: Command, p1: Point, r: Float): Unit =
         printCommand(command, s"circle $p1 $r")
