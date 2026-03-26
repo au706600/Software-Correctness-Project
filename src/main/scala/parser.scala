@@ -127,9 +127,12 @@ def parseCircle(canvas: Canvas, command: Command, p1: String, r: String): ErrorR
     (parsePoint(p1), r.toFloatOption) match
         case (Error(msg), _) => Error(msg)
         case (_, None) => Error("parseCircle() error")
-        case (Point(x, y), Some(r)) => 
-            canvas.circle(command, Point(x, y), r)
-            NoError()
+        case (Point(x, y), Some(r)) =>
+            if r < 0 then
+                Error("parseCircle() error because the radius argument is a negative number")
+            else
+                canvas.circle(command, Point(x, y), r)
+                NoError()
 
     
 def parseText(canvas: Canvas, command: Command, p1: String, text: String): ErrorResult =
@@ -154,13 +157,19 @@ def parsePoint(p1: String): PointResult =
     parseSingle(p1) match
         case Error(msg) => Error(msg)
         case SingleResult(args, rest) =>
-            if rest.nonEmpty || args.length != 2 then
-                Error(s"parsePoint() error 1: $p1")
+            if rest.nonEmpty then
+                Error(s"parsePoint() called with arg $p1: error because of rest.nonEmpty")
+            else if args.length != 2 then
+                Error(s"parsePoint() called with arg $p1: error because of args.length != 2")
             else
                 (args.head.toFloatOption, args.last.toFloatOption) match
-                    case (Some(x), Some(y)) => Point(x, y)
-                    case _ => Error(s"parsePoint() error 2: $p1")
-    
+                    case (Some(x), Some(y)) =>
+                        if x < 0 || y < 0 then
+                            Error(s"parsePoint() called with arg $p1: error because the argument contains negative number")
+                        else
+                            Point(x, y)
+                    case _ => Error(s"parsePoint() called with arg $p1: error because not able to parse to float")
+
 
 def parsePoint(arg1: String, arg2: String): PointsResult =
     (parsePoint(arg1), parsePoint(arg2)) match
