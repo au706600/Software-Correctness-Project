@@ -97,7 +97,7 @@ public class GUI {
                         
                         g.fillRect(
                             (int)(i * pixelSize * zoom + offsetX), 
-                            (int)(j * pixelSize * zoom + offsetY), 
+                            getHeight() - (int)((j + 1) * pixelSize * zoom + offsetY), 
                             (int)(pixelSize * zoom), 
                             (int)(pixelSize * zoom)
                         );
@@ -132,6 +132,11 @@ public class GUI {
                 {
                     g.drawLine(0, j, getWidth(), j);
                 }
+
+                g.setColor(Color.BLACK);
+                g.drawLine(0, getHeight() - (int)offsetY, getWidth(), getHeight() - (int)offsetY);
+                g.drawLine((int)offsetX, 0, (int)offsetX, getHeight());
+                g.drawString("(0,0)", (int)offsetX, getHeight() - (int)offsetY);
             }
         };
 
@@ -214,7 +219,7 @@ public class GUI {
 
 
             frame.setSize(1000, 1000);
-            frame.setTitle("GUI");
+            frame.setTitle("DrawGebra");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             //leftPanel.add(panel);
             frame.add(horizontalSplit);

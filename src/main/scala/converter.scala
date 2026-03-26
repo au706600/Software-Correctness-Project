@@ -18,10 +18,29 @@ class PixelsCanvas extends Canvas:
                 row.set(i2, colorValue)
 
     def boundingBox(p1: Point, p2: Point): Unit =
-        println(s"BOUNDING-BOX $p1 $p2")
+        //println(s"BOUNDING-BOX $p1 $p2")
+
+        val width = p2.x.toInt - p1.x.toInt
+        val height = p2.y.toInt - p1.y.toInt
+        
+        initPixels(width, height, 0)
 
     def line(command: Command, p1: Point, p2: Point): Unit =
-        printCommand(command, s"draw $p1 $p2")
+        //printCommand(command, s"draw $p1 $p2")
+
+        var pixels = draw.line(command, p1, p2);
+
+        for(List(x,y) <- pixels)
+        {
+            var xi = x.toInt;
+            var yi = y.toInt;
+
+            if(xi >= 0 && xi < pixelsCanvas.size && yi >= 0 && yi < pixelsCanvas.get(0).size)
+            {
+                pixelsCanvas.get(xi).set(yi, 1);
+            }
+        }
+            
 
     def rectangle(command: Command, p1: Point, p2: Point): Unit =
         printCommand(command, s"rectangle $p1 $p2")

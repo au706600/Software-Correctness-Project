@@ -8,8 +8,12 @@ lazy val root = project
 
     scalaVersion := scala3Version,
 
-    libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test
-
+    libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test,
+    fork := true,
+    javaOptions ++= Seq(
+      "-Xms1G",
+      "-Xmx4G"
+    )
   )
   
 scalacOptions ++= Seq(
@@ -17,4 +21,3 @@ scalacOptions ++= Seq(
   "-deprecation"
 )
 
-fork in run := true
