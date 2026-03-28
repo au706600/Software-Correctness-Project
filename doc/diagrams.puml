@@ -92,7 +92,7 @@ package Scala {
 
     file "parser.scala" as parser_scala {
         object functions {
-            parse(canvas: Canvas, str: String, defaultCommand: Command): ErrorResult
+            parse(canvas: Canvas, str: String, defaultCommand: Command): ErrorOption
 
         }
 

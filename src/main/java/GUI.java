@@ -7,6 +7,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -30,10 +32,14 @@ public class GUI {
     int offsetY = 0;
     double zoom = 1.0;
     //public Point origin = new Point(0,0);
-    ArrayList<ArrayList<Integer>> pixels;
-    static public void javaFun1() {
-        System.out.println("javaFun1 called");
-    }
+    ArrayList<JavaPixel> pixels;
+    
+    void update() {
+        ResultFromScala result = converter$.MODULE$.convert(codeTextArea.getText());
+        errorTextArea.setText(result.error());
+        pixels = result.pixels();
+        panel.repaint();
+    };
 
     public GUI(int w_, int h_, int pixelSize_) {
         pixelSize = pixelSize_;
@@ -50,24 +56,7 @@ public class GUI {
             public void keyTyped(KeyEvent e) {}
             @Override
             public void keyReleased(KeyEvent e) {
-                ResultFromScala result = converter$.MODULE$.convert(codeTextArea.getText());
-                errorTextArea.setText(result.getError());
-                pixels = result.getPixels();
-                panel.repaint();
-                /*
-                var graphics = panel.getGraphics();
-                for(int i=0; i<w; i++) {
-                    for(int j=0; j<h; j++) {
-                        //System.out.println(result.getPixels().size());
-                        if(result.getPixels().size()>i && result.getPixels().get(i).size()>j) {
-                            graphics.setColor(Color.BLACK);
-                        } else {
-                            graphics.setColor(Color.WHITE);
-                        }
-                        graphics.fillRect(i*pixelSize, (h-j)*pixelSize, pixelSize, pixelSize);
-                    }
-                }
-                    */
+                update();
             }
         });
 
@@ -81,35 +70,24 @@ public class GUI {
                     return;
                 }
 
-                for(int i = 0; i < pixels.size(); i++)
+                for(JavaPixel pixel : pixels)
                 {
-                    for(int j = 0; j < pixels.get(i).size(); j++)
-                    {
-                        if(pixels.get(i).get(j) == 1)
-                        {
-                            g.setColor(Color.BLACK);
-                        }
-
-                        else
-                        {
-                            g.setColor(Color.WHITE);
-                        }
-                        
-                        g.fillRect(
-                            (int)(i * pixelSize * zoom + offsetX), 
-                            (int)(j * pixelSize * zoom + offsetY), 
-                            (int)(pixelSize * zoom), 
-                            (int)(pixelSize * zoom)
-                        );
-                    }
+                    g.setColor(pixel.color());
+                    
+                    g.fillRect(
+                        (int)(pixel.x() * pixelSize * zoom + offsetX), 
+                        getHeight() - (int)((pixel.y() + 1) * pixelSize * zoom - offsetY), 
+                        (int)(pixelSize * zoom), 
+                        (int)(pixelSize * zoom)
+                    );
                 }
 
                 g.setColor(Color.LIGHT_GRAY);
 
                 int zoomGraphic = (int)(pixelSize * zoom);
 
-                newStartX = offsetX % zoomGraphic;
-                newStartY = offsetY % zoomGraphic;
+                newStartX = -offsetX % zoomGraphic;
+                newStartY = -offsetY % zoomGraphic;
 
                 if(newStartX < 0)
                 {
@@ -132,9 +110,14 @@ public class GUI {
                 {
                     g.drawLine(0, j, getWidth(), j);
                 }
+
+                g.setColor(Color.BLACK);
+                g.drawLine(0, getHeight() + (int)offsetY, getWidth(), getHeight() + (int)offsetY);
+                g.drawLine((int)offsetX, 0, (int)offsetX, getHeight());
+                g.drawString("(0,0)", (int)offsetX, getHeight() + (int)offsetY);
             }
         };
-
+        
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e)
@@ -180,10 +163,20 @@ public class GUI {
         });
         
 
-
         //------------------------------------------------------------------------
 
-        errorTextArea.setText("Some error code");
+ 
+
+        String startOfTemplate;
+        Path startOfTemplatePath = Path.of("startOfTemplate.clj");
+        try {
+            startOfTemplate = Files.readString(startOfTemplatePath);
+        } catch (Exception e) {
+            startOfTemplate = "";
+        }
+        codeTextArea.setText(startOfTemplate);
+        update();
+        
         SwingUtilities.invokeLater(() -> {
 
             JSplitPane verticalSplit = new JSplitPane(
@@ -214,7 +207,7 @@ public class GUI {
 
 
             frame.setSize(1000, 1000);
-            frame.setTitle("GUI");
+            frame.setTitle("DrawGebra");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             //leftPanel.add(panel);
             frame.add(horizontalSplit);

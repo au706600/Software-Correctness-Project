@@ -1,7 +1,5 @@
-
-@main def main(): Unit = {
-  //converter.foo()
-  //GUI.javaFun1();
+/*
+@main def _main(): Unit = {
   println("----------------------------------------------------")
   parse(PixelsCanvas(),
     """
@@ -17,6 +15,9 @@
       
       (LINE (10 11) (12 13))
     """
-  , defaultCommand=Command.draw("green"))
+  , defaultCommand=Command.draw(colorToValueNoCheck("green")))
   println("----------------------------------------------------")
 }
+*/
+// (BOUNDING-BOX (1 2) (3 4))
+// (LINE (10 11) (12 13))
