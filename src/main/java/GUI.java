@@ -208,6 +208,7 @@ public class GUI {
 
             frame.setSize(1000, 1000);
             frame.setTitle("DrawGebra");
+            frame.setTitle("DrawGebra");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             //leftPanel.add(panel);
             frame.add(horizontalSplit);
