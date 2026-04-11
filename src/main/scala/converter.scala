@@ -117,7 +117,6 @@ class PixelsCanvas extends Canvas:
         if countPixels(inBoundPixelsCanvasArray) == 0 then
             return resultHandle.error("No pixels in bound exist")
         
-
         val maxCanvasBounding = Bounding(IntPoint(0,0), IntPoint(maxWidth, maxHeight))
         val pixelsCanvas = filterPixelsCanvas(inBoundPixelsCanvasArray, maxCanvasBounding)
 

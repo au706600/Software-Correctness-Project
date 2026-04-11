@@ -39,7 +39,7 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
             }
                 pixels((x, y)) = color            
         }
-        
+    
     } else{
         var p = ((2*dx) - dy)
         while (y!=y1){
@@ -57,7 +57,6 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     }
     pixels
 }
-
 
 def drawRectangle(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Color] =
     var pixels = Map[(Int, Int), Color]()
