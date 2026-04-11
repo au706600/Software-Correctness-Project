@@ -7,8 +7,9 @@ val scaleFactor = 2
 val lineWidth = 2
 val maxWidth = 1000
 val maxHeight = 1000
-val lineScaleFactor = scaleFactor * 2
-val extraHIghlightPixels = scaleFactor * 2
+val lineScaleFactor = scaleFactor 
+val extraHIghlightPixels = scaleFactor
+
 
 
 case class PixelsResult(pixels: Map[(Int, Int), Color], msg: String)
@@ -99,7 +100,7 @@ class PixelsCanvas extends Canvas:
 
     def mergePixels(): PixelsResult =
         var resultHandle = ResultHandle()
-
+        
         val boundingBox = drawBoundingBox match
             case None => return resultHandle.error("BoundingBox not set")
             case Some(value) => value
@@ -127,9 +128,14 @@ class PixelsCanvas extends Canvas:
         var maxId = getMatCmdId(pixelsCanvas)
         val pixelsCanvases = splitById(pixelsCanvas, maxId)
         
-        val highlight =  filterPixels(getHighlight(pixelsCanvases.cmdIdMatch, resultHandle), boundingBox) ++ mergePixelsCanvas(pixelsCanvases.cmdIdMatch)
-        
-        resultHandle.result(mergePixelsCanvas(pixelsCanvases.rest) ++ highlight)
+
+        //show the highlight box first then others (highlight z=-1)
+        //prevent hightlight hide other drawing
+        val selected = mergePixelsCanvas(pixelsCanvases.cmdIdMatch)
+        val highlightOnly = filterPixels(getHighlight(pixelsCanvases.cmdIdMatch, resultHandle), boundingBox)
+
+        val finalPixels = highlightOnly ++ mergePixelsCanvas(pixelsCanvases.rest) ++ selected
+        resultHandle.result(finalPixels)
         
 
     def boundingBox(p1: Point, p2: Point, cmdId: Int): Unit =
