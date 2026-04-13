@@ -29,7 +29,7 @@ def colorToValueHelper(options: List[(String,String,String)], color: String): Er
     
     val selected = options.filter((long, short, _) => List(long.toLowerCase(), short.toLowerCase()).contains(colorLow))
 
-    if selected.length>0 then
+    if selected.length > 0 then
         stringToColor(selected.head.last)
     else
         stringToColor(colorLow)
