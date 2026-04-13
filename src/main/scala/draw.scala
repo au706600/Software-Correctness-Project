@@ -26,7 +26,12 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     val xStep = if (x0 < x1) 1 else -1
     val yStep = if (y0 < y1) 1 else -1
 
-    pixels((x, y)) = color  // Add starting point
+    def thickPixels(px: Int, py: Int) = {
+        val offset = lineWidthInPixels/2 - 1
+        for(dx <- -offset to offset; dy <- -offset to offset) {
+            pixels((px + dx, py + dy)) = color
+        }
+    }
 
     if dx>=dy then {
         var p = ((2*dy) - dx)
@@ -40,7 +45,7 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
                 y+=yStep
                 p = p + 2*dy - 2*dx
             }
-                pixels((x, y)) = color            
+                thickPixels(x, y)            
         }
     
     } else{
@@ -55,7 +60,7 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
                 y+=yStep
                 p= p + 2*dx - 2*dy
             }
-            pixels((x, y)) = color            
+                thickPixels(x, y)            
         }
     }
     pixels
@@ -77,6 +82,7 @@ def drawRectangle(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int),
     val xMax = math.max(p1.x, p2.x)
     val yMin = math.min(p1.y, p2.y)
     val yMax = math.max(p1.y, p2.y)
+
     for(x <- xMin to xMax)
         for(y <- yMin to yMax)
             val isActive =
