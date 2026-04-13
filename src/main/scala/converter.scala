@@ -5,10 +5,11 @@ import java.awt.Color
 val highlightColor = Color(220, 220, 220)
 val scaleFactor = 2
 val lineWidth = 2
-val maxWidth = 1000
+val maxPixelRangeWidth = (-1000, 1000)
+val maxPixelRangeHeight = (-1000, 1000)
 val maxHeight = 1000
-val lineScaleFactor = scaleFactor * 2
-val extraHIghlightPixels = scaleFactor * 2
+val lineWidthInPixels = scaleFactor * lineWidth
+val highlightEdgeWidthInPixels = scaleFactor * 2
 
 
 case class PixelsResult(pixels: Map[(Int, Int), Color], msg: String)
@@ -80,10 +81,10 @@ def getHighlight(data: Buffer[CmdIdAndPixels], resultHandle: ResultHandle):  Map
             data.fold(data.head)(fun)
 
         makeSquare(
-            foldPixel(maxIdPixelsX, math.min) - extraHIghlightPixels,
-            foldPixel(maxIdPixelsY, math.min) - extraHIghlightPixels,
-            foldPixel(maxIdPixelsX, math.max) + extraHIghlightPixels,
-            foldPixel(maxIdPixelsY, math.max) + extraHIghlightPixels,
+            foldPixel(maxIdPixelsX, math.min) - highlightEdgeWidthInPixels,
+            foldPixel(maxIdPixelsY, math.min) - highlightEdgeWidthInPixels,
+            foldPixel(maxIdPixelsX, math.max) + highlightEdgeWidthInPixels,
+            foldPixel(maxIdPixelsY, math.max) + highlightEdgeWidthInPixels,
             highlightColor)
 
 
@@ -117,7 +118,7 @@ class PixelsCanvas extends Canvas:
         if countPixels(inBoundPixelsCanvasArray) == 0 then
             return resultHandle.error("No pixels in bound exist")
         
-        val maxCanvasBounding = Bounding(IntPoint(0,0), IntPoint(maxWidth, maxHeight))
+        val maxCanvasBounding = Bounding(IntPoint(maxPixelRangeWidth._1, maxPixelRangeHeight._1), IntPoint(maxPixelRangeWidth._2, maxPixelRangeHeight._2))
         val pixelsCanvas = filterPixelsCanvas(inBoundPixelsCanvasArray, maxCanvasBounding)
 
         if countPixels(pixelsCanvas) == 0 then
@@ -126,12 +127,6 @@ class PixelsCanvas extends Canvas:
         var maxId = getMatCmdId(pixelsCanvas)
         val pixelsCanvases = splitById(pixelsCanvas, maxId)
         
-        //val highlight =  filterPixels(getHighlight(pixelsCanvases.cmdIdMatch, resultHandle), boundingBox) ++ mergePixelsCanvas(pixelsCanvases.cmdIdMatch)
-        
-        //resultHandle.result(mergePixelsCanvas(pixelsCanvases.rest) ++ highlight)
-
-
-        //prevent hightlighting box hide other drawing
         val selected = mergePixelsCanvas(pixelsCanvases.cmdIdMatch)
         val highlightOnly = filterPixels(getHighlight(pixelsCanvases.cmdIdMatch, resultHandle), boundingBox)
 
