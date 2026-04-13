@@ -5,47 +5,58 @@ import java.awt.Color
 
 // Bresenham's line algorithm
 def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Color] = {
+    var pixels = Map[(Int, Int), Color]()
+    
     val color = command match
         case Command.draw(color) => color
         case Command.fill(color) => color
 
+    val x0 = p1.x.toInt
+    val y0 = p1.y.toInt
+    val x1 = p2.x.toInt
+    val y1 = p2.y.toInt
 
-    // case class IntPoint(x: Float, y: Float) extends IntPointResult
-    val dx = p2.x.toInt - p1.x.toInt;
-    val dy = p2.y.toInt - p1.y.toInt;
-    var p_error = (2*dy) - dx;
+    var dx = Math.abs(x1 - x0)
+    var dy = Math.abs(y1 - y0)
 
-    // Constant time appending and prepending
-    //var IntPoints : scala.collection.mutable.Buffer[IntPoint]();
-    var points = Map[(Int, Int), Color]();
+    var x = x0
+    var y = y0
+    
 
-    var startIntPoint = p1.x.toInt;
-    var endIntPoint = p1.y.toInt;
+    pixels((x, y)) = color  // Add starting point
 
-    points((startIntPoint, endIntPoint)) = color;
-
-    while(startIntPoint < p2.x.toInt || endIntPoint < p2.y.toInt)
-    {
-        if(p_error >= 0)
-        {
-            p_error = p_error + (2 * dy - 2 * dx);
-            startIntPoint += 1;
-            endIntPoint += 1;
+    if dx>=dy then {
+        var p = ((2*dy) - dx)
+        while (x!=x1){
+            if (p<0){
+                x+=1
+                p = p + 2*dy
+            }
+            else{
+                x+=1    
+                y+=1    
+                p = p + 2*dy - 2*dx
+            }
+                pixels((x, y)) = color            
         }
-
-        else
-        {
-            p_error = p_error + (2*dy);
-            startIntPoint += 1;
+    
+    } else{
+        var p = ((2*dx) - dy)
+        while (y!=y1){
+            if (p<0){
+                y+=1
+                p= p + 2*dx
+            }
+            else{
+                x+=1
+                y+=1
+                p= p + 2*dx - 2*dy
+            }
+            pixels((x, y)) = color            
         }
-        
-        points((startIntPoint, endIntPoint)) = color;
-
     }
-
-    points
+    pixels
 }
-
 
 def drawRectangle(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Color] =
     var pixels = Map[(Int, Int), Color]()
@@ -58,7 +69,7 @@ def drawRectangle(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int),
         case Command.draw(_) => false
         case Command.fill(_) => true
     
-    val offset = lineScaleFactor - 1
+    val offset = lineWidthInPixels - 1
     val xMin = math.min(p1.x, p2.x)
     val xMax = math.max(p1.x, p2.x)
     val yMin = math.min(p1.y, p2.y)
@@ -116,7 +127,7 @@ def drawCircle(command: Command, p1: IntPoint, r: Int): Map[(Int, Int), Color] =
 
     command match
         case Command.draw(_) =>
-            drawCircleEdge(r - lineScaleFactor)
+            drawCircleEdge(r - lineWidthInPixels + 1)
         case Command.fill(_) =>
             for(i <- 0 to r)
                 drawCircleEdge(0)
@@ -126,6 +137,6 @@ def drawCircle(command: Command, p1: IntPoint, r: Int): Map[(Int, Int), Color] =
 
 
 def drawText(command: Command, p1: IntPoint, text: String): Map[(Int, Int), Color] =
-    Map() 
+    Map()
 
 
