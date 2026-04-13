@@ -22,6 +22,8 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     var x = x0
     var y = y0
     
+    val xStep = if (x0 < x1) 1 else -1
+    val yStep = if (y0 < y1) 1 else -1
 
     pixels((x, y)) = color  // Add starting point
 
@@ -33,8 +35,8 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
                 p = p + 2*dy
             }
             else{
-                x+=1    
-                y+=1    
+                x+=xStep    
+                y+=yStep
                 p = p + 2*dy - 2*dx
             }
                 pixels((x, y)) = color            
@@ -48,8 +50,8 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
                 p= p + 2*dx
             }
             else{
-                x+=1
-                y+=1
+                x+=xStep
+                y+=yStep
                 p= p + 2*dx - 2*dy
             }
             pixels((x, y)) = color            
