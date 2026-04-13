@@ -71,7 +71,7 @@ def drawRectangle(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int),
         case Command.draw(_) => false
         case Command.fill(_) => true
     
-    val offset = lineScaleFactor - 1
+    val offset = lineWidthInPixels - 1
     val xMin = math.min(p1.x, p2.x)
     val xMax = math.max(p1.x, p2.x)
     val yMin = math.min(p1.y, p2.y)
@@ -129,7 +129,7 @@ def drawCircle(command: Command, p1: IntPoint, r: Int): Map[(Int, Int), Color] =
 
     command match
         case Command.draw(_) =>
-            drawCircleEdge(r - lineScaleFactor)
+            drawCircleEdge(r - lineWidthInPixels + 1)
         case Command.fill(_) =>
             for(i <- 0 to r)
                 drawCircleEdge(0)
