@@ -3,6 +3,7 @@ import scala.collection.mutable.Map
 import java.awt.Color
 
 
+
 // Bresenham's line algorithm
 def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Color] = {
     var pixels = Map[(Int, Int), Color]()
