@@ -27,7 +27,7 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     val yStep = if (y0 < y1) 1 else -1
 
     def thickPixels(px: Int, py: Int) = {
-        val offset = lineWidthInPixels/2 - 1
+        val offset = (lineWidthInPixels-1)/2
         for(dx <- -offset to offset; dy <- -offset to offset) {
             pixels((px + dx, py + dy)) = color
         }
@@ -77,7 +77,7 @@ def drawRectangle(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int),
         case Command.draw(_) => false
         case Command.fill(_) => true
     
-    val offset = lineWidthInPixels - 1
+    val offset = lineWidthInPixels - 2
     val xMin = math.min(p1.x, p2.x)
     val xMax = math.max(p1.x, p2.x)
     val yMin = math.min(p1.y, p2.y)
@@ -136,7 +136,7 @@ def drawCircle(command: Command, p1: IntPoint, r: Int): Map[(Int, Int), Color] =
 
     command match
         case Command.draw(_) =>
-            drawCircleEdge(r - lineWidthInPixels + 1)
+            drawCircleEdge(r - (lineWidthInPixels - 1) + 1)
         case Command.fill(_) =>
             for(i <- 0 to r)
                 drawCircleEdge(0)
