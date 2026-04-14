@@ -4,11 +4,8 @@
 
 ### Improve drawLine function
 - Fix bugs in the drawLine() function.
-- Make it support line with more than 1 pixel.
-- Implement drawText() function.
 
 ## Java
-- Correct double grid so it always appear os one grid.
 - Fix GUI crash bug
 
 ## Others

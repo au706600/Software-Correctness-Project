@@ -143,9 +143,3 @@ def drawCircle(command: Command, p1: IntPoint, r: Int): Map[(Int, Int), Color] =
 
     pixels
 
-
-
-def drawText(command: Command, p1: IntPoint, text: String): Map[(Int, Int), Color] =
-    Map()
-
-

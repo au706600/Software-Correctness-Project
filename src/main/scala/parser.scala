@@ -14,11 +14,11 @@ def stringToColor(color: String): ErrorResult =
         parseSingleChar(c1)*16+parseSingleChar(c2)
 
     color.toArray match
-        case Array(_, r1,r2,g1,g2,b1,b2) =>
+        case Array(_, r1, r2, g1, g2, b1, b2) =>
             Result(Color(
-                parseCharPair(r1,r2),
-                parseCharPair(g1,g2),
-                parseCharPair(b1,b2)))
+                parseCharPair(r1, r2),
+                parseCharPair(g1, g2),
+                parseCharPair(b1, b2)))
 
         case _: Array[Char] =>
             Error(s"stringToColor() can not '${color}' convert to color")
@@ -181,7 +181,7 @@ def parseMatch(canvas: Canvas, command: Command, args: List[String], cmdId: Int)
             case List("LINE", p1, p2) => parseLine(canvas, command, p1, p2, cmdId)
             case List("RECTANGLE", p1, p2) => parseRectangle(canvas, command, p1, p2, cmdId)
             case List("CIRCLE", p1, r) => parseCircle(canvas, command, p1, r, cmdId)
-            case List("TEXT-AT", p1, text) => parseText(canvas, command, p1, text, cmdId)
+            case "TEXT-AT" :: p1 :: text => parseText(canvas, command, p1, text.mkString(" "), cmdId)
             case List("FILL", c, g) =>
                 colorToValue(c) match
                     case Error(msg) => Error(msg)
