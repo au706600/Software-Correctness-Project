@@ -99,7 +99,7 @@ def drawRectangle(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int),
 def drawCircle(command: Command, p1: IntPoint, r: Int): Map[(Int, Int), Color] =
     // See: https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
     // x^2+y^2==r^2
-
+ 
     var pixels = Map[(Int, Int), Color]()
 
     val color = command match
