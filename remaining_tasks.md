@@ -8,8 +8,8 @@
 - Implement drawText() function.
 
 ## Java
-- Add support for negative numbers in the GUI.
 - Correct double grid so it always appear os one grid.
+- Fix GUI crash bug
 
 ## Others
 - Make documentation
