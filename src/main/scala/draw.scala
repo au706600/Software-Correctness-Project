@@ -40,7 +40,7 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
                 x += 1
                 p = p + 2*dy
             }
-            else{
+            else {
                 x += xStep    
                 y += yStep
                 p = p + 2*dy - 2*dx
@@ -49,18 +49,18 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
         }
     
     } else{
-        var p = ((2*dx) - dy)
+        var p = (2*dx - dy)
         while (y != y1){
             if (p < 0){
                 y += 1
                 p = p + 2*dx
             }
-            else{
+            else {
                 x += xStep
                 y += yStep
-                p= p + 2*dx - 2*dy
+                p = p + 2*dx - 2*dy
             }
-                thickPixels(x, y)            
+            thickPixels(x, y)            
         }
     }
     pixels
