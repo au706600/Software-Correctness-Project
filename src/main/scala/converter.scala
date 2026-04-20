@@ -3,8 +3,8 @@ import java.awt.Color
 
 
 val highlightColor = Color(220, 220, 220)
-val scaleFactor = 2
-val lineWidth = 2
+val scaleFactor = 5
+val lineWidth = 1
 val maxPixelRangeWidth = (-1000, 1000)
 val maxPixelRangeHeight = (-1000, 1000)
 val maxHeight = 1000

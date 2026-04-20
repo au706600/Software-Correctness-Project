@@ -1,13 +1,5 @@
-(BOUNDING-BOX (-100 -100) (100 100))
+(BOUNDING-BOX (0 0) (200 200))
 
-(LINE (20 21) (15 43)) 
- 
-(LINE (40 21) (25 43)) 
+(LINE (10 20) (15 20))
 
-(LINE (8 10) (8 30)) 
- 
-(RECTANGLE (10 10) (19 30))
-
-(CIRCLE (0 0) 10)
-
-(draw b (TEXT-AT (30 10) Hello World))
+(LINE (10 10) (5 10))
