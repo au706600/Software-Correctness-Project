@@ -39,6 +39,7 @@ def colorToValue(color: String): ErrorResult =
     colorToValueHelper(
         List(("black", "k", "#000000"),
              ("white", "w", "#ffffff"),
+             ("gray", "w", "#999999"),
              ("red", "r", "#d90000"),
              ("blue", "b", "#0000ff"),
              ("green", "g", "#0aff00"),

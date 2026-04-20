@@ -7,7 +7,7 @@ import java.awt.Color
 // Bresenham's line algorithm
 def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Color] = {
     var pixels = Map[(Int, Int), Color]()
-    
+    var count = 0
     val color = command match
         case Command.draw(color) => color
         case Command.fill(color) => color
@@ -35,7 +35,8 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
 
     if dx>=dy then {
         var p = (2*dy - dx)
-        while (x != x1){
+        while (x != x1 && count < 1000){
+            count += 1
             if (p < 0){
                 x += 1
                 p = p + 2*dy
@@ -50,7 +51,8 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     
     } else{
         var p = (2*dx - dy)
-        while (y != y1){
+        while (y != y1 && count < 1000){
+            count += 1
             if (p < 0){
                 y += 1
                 p = p + 2*dx
