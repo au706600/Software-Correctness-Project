@@ -33,11 +33,13 @@ public class GUI {
     double zoom = 1.0;
     //public Point origin = new Point(0,0);
     ArrayList<JavaPixel> pixels;
+    ArrayList<JavaPositionText> positionTexts;
     
     void update() {
         ResultFromScala result = converter$.MODULE$.convert(codeTextArea.getText());
         errorTextArea.setText(result.error());
         pixels = result.pixels();
+        positionTexts = result.text();
         panel.repaint();
     };
 
@@ -61,6 +63,14 @@ public class GUI {
         });
 
         panel = new JPanel() {
+            int xPosToCanvasPos(int pos) {
+                return (int)(pos * pixelSize * zoom + offsetX);
+            }
+            
+            int yPosToCanvasPos(int pos) {
+                return getHeight() - (int)(pos * pixelSize * zoom - offsetY);
+            }
+
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -75,46 +85,55 @@ public class GUI {
                     g.setColor(pixel.color());
                     
                     g.fillRect(
-                        (int)(pixel.x() * pixelSize * zoom + offsetX), 
-                        getHeight() - (int)((pixel.y() + 1) * pixelSize * zoom - offsetY), 
-                        (int)(pixelSize * zoom), 
-                        (int)(pixelSize * zoom)
-                    );
+                        xPosToCanvasPos(pixel.x()),
+                        yPosToCanvasPos(pixel.y()),
+                        (int)(pixelSize * zoom + 1), 
+                        (int)(pixelSize * zoom + 1));
                 }
+                
 
-                g.setColor(Color.LIGHT_GRAY);
-
-                int zoomGraphic = (int)(pixelSize * zoom);
-
-                newStartX = -offsetX % zoomGraphic;
-                newStartY = -offsetY % zoomGraphic;
-
-                if(newStartX < 0)
-                {
-                    newStartX += zoomGraphic;
+                if(zoom > 5) {
+                    g.setColor(Color.LIGHT_GRAY);
+    
+                    int zoomGraphic = (int)(pixelSize * zoom);
+                    newStartX = offsetX % zoomGraphic;
+                    newStartY = offsetY % zoomGraphic;
+    
+                    if(newStartX < 0)
+                    {
+                        newStartX += zoomGraphic;
+                    }
+    
+                    if(newStartY < 0)
+                    {
+                        newStartY += zoomGraphic;
+                    }
+                    
+                    for(int i = newStartX; i < getWidth(); i += zoomGraphic)
+                    {
+                        g.drawLine(i, 0, i, getHeight());
+                    }
+    
+                    for(int j = newStartY; j < getHeight(); j += zoomGraphic)
+                    {
+                        g.drawLine(0, j, getWidth(), j);
+                    }
                 }
-
-                if(newStartY < 0)
-                {
-                    newStartY += zoomGraphic;
-                }
-
 
                 
-                for(int i = newStartX; i < getWidth(); i+=zoomGraphic)
-                {
-                    g.drawLine(i, 0, i, getHeight());
-                }
-
-                for(int j = newStartY; j < getHeight(); j+=zoomGraphic)
-                {
-                    g.drawLine(0, j, getWidth(), j);
+                for(JavaPositionText positionText : positionTexts)
+                    {
+                    g.setFont(new Font("serif", Font.PLAIN, (int)(positionText.size()*zoom)));
+                    g.setColor(positionText.color());
+                    g.drawString(
+                        positionText.text(),
+                        xPosToCanvasPos(positionText.x()),
+                        yPosToCanvasPos(positionText.y()));
                 }
 
                 g.setColor(Color.BLACK);
                 g.drawLine(0, getHeight() + (int)offsetY, getWidth(), getHeight() + (int)offsetY);
                 g.drawLine((int)offsetX, 0, (int)offsetX, getHeight());
-                g.drawString("(0,0)", (int)offsetX, getHeight() + (int)offsetY);
             }
         };
         
@@ -207,7 +226,6 @@ public class GUI {
 
 
             frame.setSize(1000, 1000);
-            frame.setTitle("DrawGebra");
             frame.setTitle("DrawGebra");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             //leftPanel.add(panel);

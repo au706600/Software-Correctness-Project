@@ -10,19 +10,20 @@ val maxPixelRangeHeight = (-1000, 1000)
 val maxHeight = 1000
 val lineWidthInPixels = scaleFactor * lineWidth
 val highlightEdgeWidthInPixels = scaleFactor * 2
+val textSize = 10*scaleFactor
 
 
-case class PixelsResult(pixels: Map[(Int, Int), Color], msg: String)
+case class PixelsResult(pixels: Map[(Int, Int), Color], positionTexts: Buffer[PositionText], msg: String)
 
 case class ResultHandle(warningMessages: Buffer[String]=Buffer()) {
     def addWarning(msg: String): Unit =
         warningMessages += s"warning: ${msg}"
 
     def error(msg: String): PixelsResult =
-        PixelsResult(Map[(Int, Int), Color](), (warningMessages ++ Buffer(s"error: ${msg}")).mkString("\n"))
+        PixelsResult(Map[(Int, Int), Color](), Buffer(), (warningMessages ++ Buffer(s"error: ${msg}")).mkString("\n"))
 
-    def result(pixels: Map[(Int, Int), Color]): PixelsResult =
-        PixelsResult(pixels, warningMessages.mkString("\n"))
+    def result(pixels: Map[(Int, Int), Color], positionTexts: Buffer[PositionText]): PixelsResult =
+        PixelsResult(pixels, positionTexts, warningMessages.mkString("\n"))
 }
 
 
@@ -34,6 +35,7 @@ case class Bounding(p1: IntPoint, p2: IntPoint) {
 
 
 case class CmdIdAndPixels(cmdId: Int, pixels: Map[(Int, Int), Color])
+case class PositionText(p1: IntPoint, color: Color, text: String, size: Int)
 
 
 def mergePixelsCanvas(pixelsCanvas: Buffer[CmdIdAndPixels]): Map[(Int, Int), Color] =
@@ -88,13 +90,16 @@ def getHighlight(data: Buffer[CmdIdAndPixels], resultHandle: ResultHandle):  Map
             highlightColor)
 
 
+
 class PixelsCanvas extends Canvas:
     var pixelsCanvasArray = Buffer[CmdIdAndPixels]()
+    var positionTexts = Buffer[PositionText]()
     var drawBoundingBox: Option[Bounding] = None
 
 
     def clearPixels() =
         pixelsCanvasArray.clear();
+        positionTexts.clear();
         var drawBoundingBox = None
 
 
@@ -131,7 +136,7 @@ class PixelsCanvas extends Canvas:
         val highlightOnly = filterPixels(getHighlight(pixelsCanvases.cmdIdMatch, resultHandle), boundingBox)
 
         val finalPixels = highlightOnly ++ mergePixelsCanvas(pixelsCanvases.rest) ++ selected
-        resultHandle.result(finalPixels)
+        resultHandle.result(finalPixels, positionTexts)
         
 
     def boundingBox(p1: Point, p2: Point, cmdId: Int): Unit =
@@ -151,7 +156,12 @@ class PixelsCanvas extends Canvas:
 
 
     def text(command: Command, p1: Point, text: String, cmdId: Int): Unit =
-        pixelsCanvasArray += CmdIdAndPixels(cmdId, drawText(command, p1.scale(scaleFactor), text).toMap)
+        val color = command match
+            case Command.draw(color) =>
+                color
+            case Command.fill(color) =>
+                color
+        positionTexts += PositionText(p1.scale(scaleFactor), color, text, textSize)
 
 
 object converter:
@@ -161,14 +171,21 @@ object converter:
         pixelsCanvas.clearPixels()
         val color = colorToValueNoCheck("black")
         parse(pixelsCanvas, commandos, Command.draw(color)) match
-            case Error(msg) => ResultFromScala(toJavaArrayList(Map()), s"Error: ${msg}")
+            case Error(msg) => ResultFromScala(pixelsToJavaType(Map()), java.util.ArrayList(), s"Error: ${msg}")
             case NoError()  =>
-                val PixelsResult(pixels, msg) = pixelsCanvas.mergePixels()
-                ResultFromScala(toJavaArrayList(pixels), msg)
-        
+                val PixelsResult(pixels, positionTexts, msg) = pixelsCanvas.mergePixels()
+                ResultFromScala(pixelsToJavaType(pixels), positionTextsToJavaType(positionTexts), msg)
 
-def toJavaArrayList(pixels: Map[(Int, Int), Color]) =
+
+def pixelsToJavaType(pixels: Map[(Int, Int), Color]) =
     var out = java.util.ArrayList[JavaPixel]
     for(((x, y), color) <- pixels)
         out.add(JavaPixel(x, y, color))
+    out
+
+
+def positionTextsToJavaType(positionTexts: Buffer[PositionText]) =
+    var out = java.util.ArrayList[JavaPositionText]
+    for(data <- positionTexts)
+        out.add(JavaPositionText(data.p1.x, data.p1.y, data.color, data.text, data.size))
     out
