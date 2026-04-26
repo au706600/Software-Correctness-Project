@@ -14,10 +14,10 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
         case Command.draw(color) => color
         case Command.fill(color) => color
 
-    val x0 = p1.x.toInt
-    val y0 = p1.y.toInt
-    val x1 = p2.x.toInt
-    val y1 = p2.y.toInt
+    val x0 = p1.x
+    val y0 = p1.y
+    val x1 = p2.x
+    val y1 = p2.y
 
     var dx = Math.abs(x1 - x0)
     var dy = Math.abs(y1 - y0)
@@ -36,11 +36,9 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     }
 
     if dx>=dy then {
-        while (x != x1){
         var p = (2*dy - dx)
-            count += 1
-            println ("dx" + count)
-            if (p < 0){
+        while (x != x1){
+            if (p <= 0){
                 x += xStep
                 p = p + 2*dy
             }
@@ -49,15 +47,16 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
                 y += yStep
                 p = p + 2*dy - 2*dx
             }
-            thickPixels(x, y)            
+            thickPixels(x, y)        
+
+            count += 1
+            println ("dx" + count)    
         }
     
     } else{
         var p = (2*dx - dy)
         while (y != y1 ){
-            count += 1
-            println ("dy" + count)
-            if (p < 0){
+            if (p <= 0){
                 y += yStep
                 p = p + 2*dx
             }
@@ -66,7 +65,10 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
                 y += yStep
                 p = p + 2*dx - 2*dy
             }
-            thickPixels(x, y)            
+            thickPixels(x, y)     
+
+            count += 1
+            println ("dy" + count)       
         }
     }
     pixels
