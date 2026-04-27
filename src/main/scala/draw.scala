@@ -51,7 +51,7 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     } else{
         var p = (2*dx - dy)
         while (y != y1 ){
-            if (p < 0){
+            if (p <= 0){
                 y += yStep
                 p = p + 2*dx
             }
