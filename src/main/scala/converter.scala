@@ -3,14 +3,14 @@ import java.awt.Color
 
 
 val highlightColor = Color(220, 220, 220)
-val scaleFactor = 5
+val scaleFactor = 3
 val lineWidth = 1
 val maxPixelRangeWidth = (-1000, 1000)
 val maxPixelRangeHeight = (-1000, 1000)
 val maxHeight = 1000
 val lineWidthInPixels = scaleFactor * lineWidth
 val highlightEdgeWidthInPixels = scaleFactor * 2
-val textSize = 10*scaleFactor
+val textSize = 15*scaleFactor
 
 
 case class PixelsResult(pixels: Map[(Int, Int), Color], positionTexts: Buffer[PositionText], msg: String)

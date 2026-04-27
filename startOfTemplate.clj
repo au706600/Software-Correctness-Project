@@ -1,49 +1,62 @@
-(BOUNDING-BOX (0 0) (300 300))
-
-;bar chart
-
-(RECTANGLE (15 5) (100 50))
-(TEXT-AT (15 3) 0)
-(TEXT-AT (35 3) 5)
-(TEXT-AT (55 3) 10)
-(TEXT-AT (75 3) 15)
-
-(TEXT-AT (40 -5) "What do you expect from life?")
-
-(fill b (RECTANGLE (16 45) (80 40)))
-(draw b (TEXT-AT (8 42) Prolog))
-(draw b (TEXT-AT (82 42) 16))
-
-(fill r (RECTANGLE (16 30) (54 25)))
-(draw r (TEXT-AT (5 27) More Scala))
-(draw r (TEXT-AT (56 27) 9))
-
-(fill k (RECTANGLE (16 15) (35 10)))
-(TEXT-AT (8 12) Scala)
-(TEXT-AT (37 12) 5)
+(BOUNDING-BOX (0 0) (200 300))
 
 
+; Figure: bar chart
+(DRAW black 
+    ; Frame
+    (RECTANGLE (30 170) (130 210))
+    (TEXT-AT (53.5 150) "What do you expect from life?")
+    
+    ; 'Scala' bar commands
+    (RECTANGLE (30 174) (56.6 182))
+    (TEXT-AT (61.6 177.2) 5)
+    (TEXT-AT (9 177.2) Scala)
+    
+    ; 'More Scala' bar commands
+    (RECTANGLE (30 186) (77.8 194))
+    (TEXT-AT (82.8 189.2) 9)
+    (TEXT-AT (9 189.2) More Scala)
+    
+    ; 'Prolog' bar commands
+    (RECTANGLE (30 198) (115 206))
+    (TEXT-AT (120 201.2) 16)
+    (TEXT-AT (9 201.2) Prolog)
+    
+    ; X-axis numbers
+    (TEXT-AT (30 162) 0)
+    (TEXT-AT (56.6 162) 5)
+    (TEXT-AT (83 162) 10)
+    (TEXT-AT (109.7 162) 15))
 
-;pie chart
-(CIRCLE (50 100) 30)
-(TEXT-AT (40 60) Popularity of Programming Languages )
 
-(LINE (50 100) (50 130))
-(TEXT-AT (60 115) 25%)
-(TEXT-AT (70 125) Scala)
-
-
-(LINE (50 100) (80 100))
-(TEXT-AT (40 115) 25%)
-(TEXT-AT (20 120) Java)
-
-(LINE (20 100) (80 100))
-(TEXT-AT (30 90) 15%)
-(TEXT-AT (15 85) Haskell)
-
-
-(LINE (30 78) (50 100))
-(TEXT-AT (55 85) 35%)
-(TEXT-AT (75 80) Python)
-
-
+; Figure: pie chart
+(DRAW black 
+    ; Frame
+    (FILL gray (CIRCLE (75 75) 40))
+    (CIRCLE (75 75) 40)
+    (TEXT-AT (45.2 16.1) Popularity of Programming Languages)
+    
+    ; 'Haskell' section commands
+    (LINE (75 75) (105.8 100.5))
+    (TEXT-AT (102.6 84) 11%)
+    (TEXT-AT (117 91) Haskell)
+    
+    ; 'Lisp' section commands
+    (LINE (75 75) (98.5 107.4))
+    (TEXT-AT (95.2 97.5) 4%)
+    (TEXT-AT (107.2 108) Lisp)
+    
+    ; 'Scala' section commands
+    (LINE (75 75) (51.5 107.4))
+    (TEXT-AT (72.5 106.2) 20%)
+    (TEXT-AT (70.8 120.2) Scala)
+    
+    ; 'Other' section commands
+    (LINE (75 75) (35.1 72.5))
+    (TEXT-AT (43.5 87.8) 16%)
+    (TEXT-AT (23.7 95.2) Other)
+    
+    ; 'Prolog' section commands
+    (LINE (75 75) (115 74))
+    (TEXT-AT (73.5 42.2) 49%)
+    (TEXT-AT (71.5 28.2) Prolog))
