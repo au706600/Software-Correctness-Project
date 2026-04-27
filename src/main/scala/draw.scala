@@ -8,8 +8,6 @@ import java.awt.Color
 def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Color] = {
     var pixels = Map[(Int, Int), Color]()
     
-    var count = 0 
-
     val color = command match
         case Command.draw(color) => color
         case Command.fill(color) => color
@@ -38,8 +36,6 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     if dx>=dy then {
         while (x != x1){
         var p = (2*dy - dx)
-            count += 1
-            println ("dx" + count)
             if (p < 0){
                 x += xStep
                 p = p + 2*dy
@@ -55,8 +51,6 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     } else{
         var p = (2*dx - dy)
         while (y != y1 ){
-            count += 1
-            println ("dy" + count)
             if (p < 0){
                 y += yStep
                 p = p + 2*dx
