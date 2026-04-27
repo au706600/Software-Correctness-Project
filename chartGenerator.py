@@ -60,8 +60,8 @@ def barChart(xy1: tuple[float, float], xy2: tuple[float, float], parts: list[Par
     height = xy2[1] - xy1[1]
     
     cmds.append('; Frame')
-    cmds.append(rectangle(xy1, xy2))
     cmds.append(text((xy2[0] - xy1[0] - len(label)*1.5, xy1[1] - width*0.2), label))
+    cmds.append(rectangle(xy1, xy2))
 
     maxAmount = max(part.amount for part in parts)
 
@@ -83,9 +83,9 @@ def barChart(xy1: tuple[float, float], xy2: tuple[float, float], parts: list[Par
         textYPos = barLowY + barHeight * (0.5 + textYScaleRatio)
         cmds.append('')
         cmds.append(f"; '{part.label}' bar commands")
-        cmds.append(rectangle((xy1[0], barLowY), (barEndX, barLowY + barHeight)))
-        cmds.append(text((barEndX + width*0.05, textYPos), str(part.amount)))
         cmds.append(text((xy1[0] - width*0.21, textYPos), part.label))
+        cmds.append(text((barEndX + width*0.05, textYPos), str(part.amount)))
+        cmds.append(rectangle((xy1[0], barLowY), (barEndX, barLowY + barHeight)))
     
     cmds.append('')
     cmds.append('; X-axis numbers')
@@ -110,9 +110,9 @@ def pieChart(xy: tuple[float, float], radius: float, parts: list[Part], label: s
         cmds.append(text((x + radius*ratioScale*cos(angle) - len(text_)*0.85, y + radius*(ratioScale + sideScale*abs(sin(angle)*0.15))*sin(angle) - 0.85), text_))
 
     cmds.append('; Frame')
+    addText(-pi/2, 1.6, -1, label)
     cmds.append(fill(fillColor, circle((x, y), radius)))
     cmds.append(circle((x, y), radius))
-    addText(-pi/2, 1.6, -1, label)
 
     oldRad = 0
     angle = 0
@@ -125,11 +125,12 @@ def pieChart(xy: tuple[float, float], radius: float, parts: list[Part], label: s
         cmds.append('')
         cmds.append(f"; '{part.label}' section commands")
 
+        addText(textAngle, 1.3, -1, part.label)
+        addText(textAngle, 0.8, 0, str(round(percent))+'%')
+
         if len(parts) > 1:
             addLine(angle)
 
-        addText(textAngle, 0.8, 0, str(round(percent))+'%')
-        addText(textAngle, 1.3, -1, part.label)
         oldRad = angle
 
     return draw(baseColor, cmds)
