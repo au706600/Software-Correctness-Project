@@ -7,7 +7,7 @@ import java.awt.Color
 // Bresenham's line algorithm
 def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Color] = {
     var pixels = Map[(Int, Int), Color]()
-    
+
     val color = command match
         case Command.draw(color) => color
         case Command.fill(color) => color
@@ -17,52 +17,57 @@ def drawLine(command: Command, p1: IntPoint, p2: IntPoint): Map[(Int, Int), Colo
     val x1 = p2.x
     val y1 = p2.y
 
-    var dx = Math.abs(x1 - x0)
-    var dy = Math.abs(y1 - y0)
+    val dx = Math.abs(x1 - x0)
+    val dy = Math.abs(y1 - y0)
 
     var x = x0
     var y = y0
-    
+
     val xStep = if (x0 < x1) 1 else -1
     val yStep = if (y0 < y1) 1 else -1
 
-    def thickPixels(px: Int, py: Int) = {
+    def thickPixels(px: Int, py: Int): Unit = {
         val offset = lineWidthInPixels / 2
-        for(dx <- -offset to offset; dy <- -offset to offset) {
-            pixels((px + dx, py + dy)) = color
+        if (dx >= dy) {
+            for (oy <- -offset to offset)
+                pixels((px, py + oy)) = color
+        } else {
+            for (ox <- -offset to offset)
+                pixels((px + ox, py)) = color
         }
     }
 
-    if dx>=dy then {
-        var p = (2*dy - dx)
-        while (x != x1){
-            if (p <= 0){
+    // Include the start point so the line is symmetric at both ends.
+    thickPixels(x, y)
+
+    if (dx >= dy) {
+        var p = 2 * dy - dx
+        while (x != x1) {
+            if (p <= 0) {
                 x += xStep
-                p = p + 2*dy
-            }
-            else {
-                x += xStep    
+                p += 2 * dy
+            } else {
+                x += xStep
                 y += yStep
-                p = p + 2*dy - 2*dx
+                p += 2 * dy - 2 * dx
             }
-            thickPixels(x, y)        
+            thickPixels(x, y)
         }
-    
-    } else{
-        var p = (2*dx - dy)
-        while (y != y1 ){
-            if (p <= 0){
+    } else {
+        var p = 2 * dx - dy
+        while (y != y1) {
+            if (p <= 0) {
                 y += yStep
-                p = p + 2*dx
-            }
-            else {
+                p += 2 * dx
+            } else {
                 x += xStep
                 y += yStep
-                p = p + 2*dx - 2*dy
+                p += 2 * dx - 2 * dy
             }
-            thickPixels(x, y)     
+            thickPixels(x, y)
         }
     }
+
     pixels
 }
 
