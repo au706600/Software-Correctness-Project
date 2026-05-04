@@ -10,8 +10,8 @@
 - Make documentation
 - Finish slang part if more is needed and document it.
 
-## Presentation
+## Presentation and document
 - Demo
 - Show code
 - Show scala
-- Discuss about current problem (GUI crash when zoom out, delay (lag) if the value is huge)
+- Discuss about current problem/limit (GUI crash when zoom out, delay (lag) if the value is huge, limit color option?)
