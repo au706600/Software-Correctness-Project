@@ -3,30 +3,30 @@
 
 ; Figure: bar chart
 (DRAW black 
-    ; Frame
-    (TEXT-AT (53.5 150) "What do you expect from life?")
-    (RECTANGLE (30 170) (130 210))
-    
     ; 'Scala' bar commands
     (TEXT-AT (9 177.2) Scala)
     (TEXT-AT (61.6 177.2) 5)
-    (RECTANGLE (30 174) (56.6 182))
+    (fill red (RECTANGLE (30 174) (56.6 182)))
     
     ; 'More Scala' bar commands
     (TEXT-AT (9 189.2) More Scala)
     (TEXT-AT (82.8 189.2) 9)
-    (RECTANGLE (30 186) (77.8 194))
+    (fill blue (RECTANGLE (30 186) (77.8 194)))
     
     ; 'Prolog' bar commands
     (TEXT-AT (9 201.2) Prolog)
     (TEXT-AT (120 201.2) 16)
-    (RECTANGLE (30 198) (115 206))
+    (fill yellow (RECTANGLE (30 198) (115 206)))
     
     ; X-axis numbers
     (TEXT-AT (30 162) 0)
     (TEXT-AT (56.6 162) 5)
     (TEXT-AT (83 162) 10)
-    (TEXT-AT (109.7 162) 15))
+    (TEXT-AT (109.7 162) 15)
+
+    ; Frame
+    (TEXT-AT (53.5 150) "What do you expect from life?")
+    (RECTANGLE (30 170) (130 210)))
 
 
 ; Figure: pie chart
