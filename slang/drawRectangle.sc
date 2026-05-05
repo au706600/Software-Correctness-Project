@@ -64,6 +64,8 @@ def runtimeAssert3(label: String, expected: MSZ[(Z, Z)], actual: MSZ[(Z, Z)]): U
 
 @pure def drawRectangle(x1: Z, y1: Z, x2: Z, y2: Z): MSZ[(Z, Z)] = {
   Contract(
+    // The insures contract is here being accepted even if it is changed to something that is clearly not correct.
+    // It might be because the strictpure functions have no specified contract.
     Ensures(Res[MSZ[(Z, Z)]] == drawRectangleRec(x1, y1, x2, y2))
   )
   val xMin = min(x1, x2)

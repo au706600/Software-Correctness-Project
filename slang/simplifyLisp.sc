@@ -36,10 +36,10 @@ def runtimeAssert2(label: String, expected: String, actual: String): Unit = {
 
 
 @strictpure def stringToMSZHelper(text: String, index: Z): MSZ[String] = {
-  if(index>=text.size) {
+  if(index >= text.size) {
     MSZ[String]()
   } else {
-    ops.StringOps(text).substring(index, index+1) +: stringToMSZHelper(text, index + 1)
+    ops.StringOps(text).substring(index, index + 1) +: stringToMSZHelper(text, index + 1)
   }
 }
 
@@ -115,7 +115,7 @@ def runtimeAssert2(label: String, expected: String, actual: String): Unit = {
 
 
 @strictpure def removeCommentsHelper(first: String, rest: MSZ[String], commentActive: B): MSZ[String] = {
-  if (first=="") {
+  if (first == "") {
     MSZ[String]()
   } else if (first == "\n") {
     removeCommentsHelper(head(rest), tail(rest), false)

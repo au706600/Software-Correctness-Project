@@ -90,7 +90,6 @@ def getHighlight(data: Buffer[CmdIdAndPixels], resultHandle: ResultHandle):  Map
             highlightColor)
 
 
-
 class PixelsCanvas extends Canvas:
     var pixelsCanvasArray = Buffer[CmdIdAndPixels]()
     var positionTexts = Buffer[PositionText]()
