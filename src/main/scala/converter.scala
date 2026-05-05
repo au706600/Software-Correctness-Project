@@ -2,15 +2,20 @@ import scala.collection.mutable.Buffer
 import java.awt.Color
 
 
+// ---- Global scala settings -----------------------------------------------------------------
 val highlightColor = Color(220, 220, 220)
 val scaleFactor = 3
 val lineWidth = 1
 val maxPixelRangeWidth = (-1000, 1000)
 val maxPixelRangeHeight = (-1000, 1000)
 val maxHeight = 1000
+val textSize = 15
+// --------------------------------------------------------------------------------------------
+
+
+val scaledTextSize = textSize * scaleFactor
 val lineWidthInPixels = scaleFactor * lineWidth
 val highlightEdgeWidthInPixels = scaleFactor * 2
-val textSize = 15*scaleFactor
 
 
 case class PixelsResult(pixels: Map[(Int, Int), Color], positionTexts: Buffer[PositionText], msg: String)
@@ -160,7 +165,7 @@ class PixelsCanvas extends Canvas:
                 color
             case Command.fill(color) =>
                 color
-        positionTexts += PositionText(p1.scale(scaleFactor), color, text, textSize)
+        positionTexts += PositionText(p1.scale(scaleFactor), color, text, scaledTextSize)
 
 
 object converter:

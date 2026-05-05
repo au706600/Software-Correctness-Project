@@ -1,26 +1,13 @@
-# Plotting tool report
+# Documentation
 
 <!-- 
-
-Logika is using a SMT solver .
-
-
-For the presentation:
-- Demonstrating the tool
-- Talk about the applied prof technics.
-- Maybe talk about the architecture.
-- Something may work and something may not work.
-- It may take like 5 to 7 or 10 min for a group so it is not much.
-
-
 For the project report:
 - Max 6 pages
 - The architecture
 - Screen shots
 - How is it testes
 - How you have used prof technics.
-
- -->
+-->
 
 The plotting tool have 3 section as shown on the following figure.
 
@@ -29,11 +16,15 @@ Section overview
 
 ## The architecture
 
-The code in Java is responsible for the GUI. It reads the text in the *command section* and calls and Scala function which return an *data structure* in form of an *java record*. The returned data structure containing all the of x and y coordinates for each pixel together with an color. The data structure also contains an error string. The parsed text commandos is also a part of the data structure because the text is drawn directly in java.
+The code in Java is responsible for the GUI. It reads the text in the *command section* and calls a Scala function, which returns a data structure in the form of a Java record. The returned data structure contains all the x‑ and y‑coordinates for each pixel together with a color value. It also includes an error string. The parsed text commands are part of the data structure as well, because the text is drawn directly in Java.
 
-It means Scala is responsible for the parsing and for error handling and for the 3 drawing functions `drawLine()`, `drawRectangle()` and `drawCircle()`. In addison the highlight on the last drawn commando is also handles in scala. Because the text drawings is handled in java it is not part of the highlight functionality.
-As it appear from task description the draw command has no upper-bounds on the number of arguments. `(DRAW c g1 g2 g3 ...  )`
-It means a base color can be specified for multiply commands as once. Commands can be nested where the most inner command take priority.
+This means Scala is responsible for parsing, error handling, and the three drawing functions: `drawLine()`, `drawRectangle()`, and `drawCircle()`. In addition, the highlighting of the last executed command is also handled in Scala. Because text rendering is handled in Java, it is not included in the highlight functionality.
+
+As stated in the task description, the draw command has no upper bound on the number of arguments:  
+`(DRAW c g1 g2 g3 ...)`  
+This means a base color can be specified for multiple commands at once. Commands can also be nested, where the innermost command takes priority.
+
+
 ``` clj
 ; The principle of nested commands.
 ; Where g1 is drawn with blue and g2 is filled with black and g3 is drawn with red.
@@ -42,13 +33,13 @@ It means a base color can be specified for multiply commands as once. Commands c
 
 The 3 drawing functions is implemented as pure functions meaning they do not have sideeffect.
 
-Here is the interface for the `drawCircle()` function. The `drawLine()` `drawRectangle()` functions follows the same logic.
+Here is the interface for the `drawCircle()` function. The `drawLine()` and `drawRectangle()` functions follows the same logic.
 ``` scala
 // The argument 'command' contains the color and information about if it is a 'draw' or 'fill' command.
 def drawCircle(command: Command, p1: IntPoint, r: Int): Map[(Int, Int), Color] =...
 ```
 
-The parser is made so it also supports comments. An single line comment is `;` and a block can be be commented with `(command ...)`
+The parser is made so it also supports comments. An single line comment is `;` and a block can be commented with `(command ...)`
 
 ``` clj
 (BOUNDING-BOX (0 0) (200 300))
@@ -63,9 +54,12 @@ Command section code example
 
 
 ### Conceptional overview
-An simplified overview of the data flow is shown on the following diagram.  
+An simplified overview of the data flow is shown on the following diagram.
+
 <img src="../out/doc/diagrams/Overview.svg">
+
 Conceptional overview diagram
+
 <br><br>
 
 <!-- 
@@ -77,24 +71,35 @@ Conceptional overview diagram
 ### Class diagram
 
 <img src="../out/doc/diagrams/Relationships.svg">
+
 Limited class diagram of the dependencies
 
 ## Usage example
 
 <img src="../doc/images/gui_1.png">
 
+Example of the tool in usage
 
 ## Testing and prof technics
 
-The gui is tested by visually verify that the functionality is as intended. The parser is tested by use of unittest.
-Scala has a rich typing system that gives some great guarantees at compile-time. E.g. Scala's `case class` combined with and match statements works great. Some *functional style* programming technics is used which reducing the states of the program.
+The GUI is tested by visually verifying that the functionality behaves as intended.  
+The parser is tested using unit tests.
 
-Some of the Scala code is also implemented in Slang with fully or simplified functionality. Logika is used to verify inbound checks and for ensuring while loop progression. Some of the code is defined recursive.
+Scala has a rich type system that provides strong guarantees at compile time.  
+For example, Scala's *case class* combined with match statements works very well.  
+Some *functional‑style* programming techniques are used, which can reduce the number of program states.
 
-In Scala we can avoid out of bound checks by the use of more safe techniques like use of iterators or string functions. Instead of handling the strings as sequences as we have done in slang. By using a iterator based for loop instead of an while loop also means we do not need to check for termination conditions.
+Some of the Scala code is also implemented in Slang with either full or simplified functionality.  
+Logika is used to verify that indices are within bounds and to ensure correct while‑loop progression.
 
-There is implemented and simplified version of the `drawRectangle()` function containing an while loop where there is made an invariant for the generated sequence. We have not managed to make Logika verify that the loop invariant holds. It is unknown if the risen for this is because Logical are finding an corner case or because the invariant is defined in a way that is too hard for Logika to verify and times out before it finds a solution. Some of the slang code is also unittested. It makes it is easier to make Logika verify the code when you have some level of verification before hand.
+In Scala, we can avoid out‑of‑bounds errors by using safer techniques such as iterators or string functions, instead of handling strings as sequences as we have done in Slang.  
+Using an iterator‑based *for loop* instead of a *while loop* also removes the need for verify termination.
 
+A simplified version of the `drawRectangle()` function has been implemented, containing a *while loop* with an invariant defined for the generated sequence.  
+We have not been able to get Logika to verify that the loop invariant holds.
+It is unclear whether this is because Logika has found a corner case, or because the invariant is defined in a way that is too complex for Logika to verify before it times out.
+
+Some of the Slang code is also unit tested. It makes it is easier to make Logika verify the code when you have some level of verification beforehand.
 
 Here is an example of how the `text.isInBound()` is used to verify that the first index is safe to access.
 
